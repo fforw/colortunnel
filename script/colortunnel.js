@@ -145,7 +145,7 @@ window.onload = function()
     var $canvas = $("#teh-canvas");
     var canvas = $canvas[0];
     
-    console.debug($canvas);
+    //console.debug($canvas);
     
     var width = $window.width() - 1;
     var height = $window.height() - 1;
@@ -178,7 +178,7 @@ window.onload = function()
             endPoint = colorPos(1.0);
             controlPoint = colorPos(1.4);
             
-            console.debug("start = %s, control = %s, end = %s", colorCubePos, controlPoint, endPoint );
+            //console.debug("start = %s, control = %s, end = %s", colorCubePos, controlPoint, endPoint );
             
             t = 0;
         }
@@ -187,8 +187,9 @@ window.onload = function()
         var pt1 = endPoint.clone().substract(controlPoint).scale(t).add(controlPoint);
         var pt2 = pt1.clone().substract(pt0).scale(t).add(pt0);
 
-        console.debug("pt0 = %s, pt2 = %s, pt1 = %s", pt0, pt2, pt1);
+        //console.debug("pt0 = %s, pt2 = %s, pt1 = %s", pt0, pt2, pt1);
 
+        
         var col;
         if (invert)
         {
@@ -199,11 +200,10 @@ window.onload = function()
             col = color(pt2.x,pt2.y,pt2.z);
         }
         
-        ctx.fillStyle = col;
-
         var cx = centerX + Math.random() * 32 - 16;
         var cy = centerY + Math.random() * 32 - 16;
         
+        ctx.fillStyle = col;
         ctx.fillRect(cx - offset, cy - offset , offset2, offset2);
         ctx.drawImage(canvas, -scaleX, -scaleY, width + scaleX + scaleX, height + scaleY + scaleY);
         
