@@ -1,7 +1,7 @@
 //(function($)
 //{
     
-function limit(gun)
+function clamp(gun)
 {
     return gun < 0 ? 0 : gun > 255 ? 255 : gun;
 }
@@ -22,9 +22,9 @@ function hex(n)
 
 function color(r,g,b)
 {
-    r = limit(r);
-    g = limit(g);
-    b = limit(b);
+    r = clamp(r);
+    g = clamp(g);
+    b = clamp(b);
     
     return "#" + hex(r) + hex(g) + hex(b);
 }
@@ -101,8 +101,9 @@ toString:
 });
 
 
-var colorCubePos;
+var startPoint;
 var controlPoint;
+var controlPoint2;
 var endPoint =  new Vector3D(0,0,0);
 var t = 1.0;
 
@@ -136,6 +137,11 @@ function gunRnd(range)
 function colorPos(range)
 {
     return new Vector3D(gunRnd(range), gunRnd(range),  gunRnd(range));
+}
+
+function bezierPoint(pt0, pt1, t)
+{
+    return pt1.clone().substract(pt0).scale(t).add(pt0);
 }
     
 window.onload = function()
@@ -174,19 +180,25 @@ window.onload = function()
         
         if (t >= 1)
         {
-            colorCubePos = endPoint;
+            startPoint = endPoint;
             endPoint = colorPos(1.0);
-            controlPoint = colorPos(1.4);
+            controlPoint = colorPos(1.6);
+            controlPoint2 = colorPos(1.6);
             
             //console.debug("start = %s, control = %s, end = %s", colorCubePos, controlPoint, endPoint );
             
             t = 0;
         }
         
-        var pt0 = controlPoint.clone().substract(colorCubePos).scale(t).add(colorCubePos);
-        var pt1 = endPoint.clone().substract(controlPoint).scale(t).add(controlPoint);
-        var pt2 = pt1.clone().substract(pt0).scale(t).add(pt0);
-
+        var ptS1 = bezierPoint(startPoint, controlPoint, t);
+        var pt12 = bezierPoint(controlPoint, controlPoint2, t);
+        var pt2e = bezierPoint(controlPoint2, endPoint, t);
+        
+        var ptS112 = bezierPoint(ptS1, pt12, t);
+        var pt122e = bezierPoint(pt12, pt2e, t);
+        
+        var pt2 = bezierPoint(ptS112, pt122e, t);
+        
         //console.debug("pt0 = %s, pt2 = %s, pt1 = %s", pt0, pt2, pt1);
 
         
@@ -207,7 +219,7 @@ window.onload = function()
         ctx.fillRect(cx - offset, cy - offset , offset2, offset2);
         ctx.drawImage(canvas, -scaleX, -scaleY, width + scaleX + scaleX, height + scaleY + scaleY);
         
-        t += 0.005;
+        t += 0.007;
     });
 };
     
