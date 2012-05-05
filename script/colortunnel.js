@@ -143,6 +143,8 @@ function bezierPoint(pt0, pt1, t)
 {
     return pt1.clone().substract(pt0).scale(t).add(pt0);
 }
+
+var mainLoop ;
     
 window.onload = function()
 {
@@ -176,7 +178,8 @@ window.onload = function()
         invert = !invert;
     });
     
-    MainLoop.start($canvas, function() {
+    
+    mainLoop = function() {
         
         if (t >= 1)
         {
@@ -220,7 +223,11 @@ window.onload = function()
         ctx.drawImage(canvas, -scaleX, -scaleY, width + scaleX + scaleX, height + scaleY + scaleY);
         
         t += 0.007;
-    });
+        requestAnimationFrame(mainLoop);
+    };
+    
+
+    mainLoop();
 };
     
 //})(jQuery);
